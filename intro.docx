@@ -1,35 +1,89 @@
 What data types do each of these values represent?
 
-"A Clockwork Orange"
-42
-09/02/1945
-98.7
-$15.99
+"A Clockwork Orange"  = STRING
+42 = INTEGER
+09/02/1945 = DATE
+98.7  = FLOAT
+$15.99  = MONEY
+
 Explain in your own words when a database might be used. Explain when a text file might be used.
+
+A database let the user retrieve information to a server and allow to save, retrieve, modify or delete that data
+It can be do it through an interface or with an application in another server.A text can be used as a readable and writable text file
+or just a text, a data table as an sql is written in a binary structure that can be modified through the sql code
+through tables.
 
 Describe one difference between SQL and other programming languages.
 
+SQL store data in sql format creating them in tables, where can be used modifing or retrieving data from those
+tables where those tables can be linked together. It is not a programming language like javascript to create an application 
+SQL is a language just to add or retrieve the data from an application. To make change and store the data we need a database 
+we cant make changes every time we need to a variable or array content.
+
 In your own words, explain how the pieces of a database system fit together at a high level.
+
+The high level in a SQL allow process two transaction of databases at the same time having their own isolation.
+Each piece of data can be stored, modified or deleted at the same time as another equally in datat type with not need to
+wait for processes. Thats one of the advantage of SQL.
+
+
+
 
 Explain the meaning of table, row, column, and value.
 
+A table hold a structure of data where that data is divided in datatype (columns), row where that rows contains
+the data of each column or datatype, and the values where that values are the content of each cell (each cell 
+are the intersection of each column (datatype) and the rows )
+
+A table is descripted with a name 
+
+
+
+
 List 3 data types that can be used in a table.
+
+Money, date, integer
+
+
 
 Given this payments table, provide an English description of the following queries and include their results:
 
      SELECT date, amount
      FROM payments;
 
+Selecting all of the date and ammount columns that are less than 500 from the table Payments 
+
      SELECT amount
      FROM payments
      WHERE amount > 500;
 
+Selecting from the table Payments all the Mega Foods Payees,  date and ammount (in this case is suposely the
+ amount and date of theas described on the information above), or all the information from Mega Foods Payees.
+
      SELECT *
      FROM payments
      WHERE payee = 'Mega Foods';
+
 Given this users table, write SQL queries using the following criteria and include the output:
 
+
 The email and sign-up date for the user named DeAndre Data.
+
+SELECT date, sign-up-date
+FROM users
+WHERE payee = 'DeAndre Data';
+
+
 The user ID for the user with email 'aleesia.algorithm@uw.edu'.
+
+SELECT ID
+FROM users
+WHERE email = 'aleesia.algorithm@uw.edu';
+
 All the columns for the user ID equal to 4.
+
+SELECT * 
+FROM users
+WHERE ID = 4;
+
 
