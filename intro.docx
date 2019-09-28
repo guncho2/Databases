@@ -1,0 +1,35 @@
+What data types do each of these values represent?
+
+"A Clockwork Orange"
+42
+09/02/1945
+98.7
+$15.99
+Explain in your own words when a database might be used. Explain when a text file might be used.
+
+Describe one difference between SQL and other programming languages.
+
+In your own words, explain how the pieces of a database system fit together at a high level.
+
+Explain the meaning of table, row, column, and value.
+
+List 3 data types that can be used in a table.
+
+Given this payments table, provide an English description of the following queries and include their results:
+
+     SELECT date, amount
+     FROM payments;
+
+     SELECT amount
+     FROM payments
+     WHERE amount > 500;
+
+     SELECT *
+     FROM payments
+     WHERE payee = 'Mega Foods';
+Given this users table, write SQL queries using the following criteria and include the output:
+
+The email and sign-up date for the user named DeAndre Data.
+The user ID for the user with email 'aleesia.algorithm@uw.edu'.
+All the columns for the user ID equal to 4.
+
