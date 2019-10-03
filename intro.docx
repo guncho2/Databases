@@ -51,11 +51,20 @@ Given this payments table, provide an English description of the following queri
      SELECT date, amount
      FROM payments;
 
-Selecting all of the date and ammount columns that are less than 500 from the table Payments 
 
-     SELECT amount
+Get the values stored in the date and amount columns from the payments table
+ All rows from the payments table for the date and amount column
+
+
+
+     SELECT date, amount
      FROM payments
      WHERE amount > 500;
+
+Get all values stored in the amount column from the payments table that are greater than
+
+ 500 All values greater than 500 in the amount column
+
 
 Selecting from the table Payments all the Mega Foods Payees,  date and ammount (in this case is suposely the
  amount and date of theas described on the information above), or all the information from Mega Foods Payees.
@@ -66,24 +75,24 @@ Selecting from the table Payments all the Mega Foods Payees,  date and ammount (
 
 Given this users table, write SQL queries using the following criteria and include the output:
 
-
 The email and sign-up date for the user named DeAndre Data.
 
-SELECT date, sign-up-date
-FROM users
-WHERE payee = 'DeAndre Data';
-
+  SELECT email, sign-up 
+  FROM users
+  WHERE name = 'DeAndre Data'
 
 The user ID for the user with email 'aleesia.algorithm@uw.edu'.
 
-SELECT ID
-FROM users
-WHERE email = 'aleesia.algorithm@uw.edu';
+  SELECT id 
+  FROM users
+  WHERE email = 'aleesia.algorithm@uw.edu'
 
-All the columns for the user ID equal to 4.
+All the columns for the user ID equal to 4
 
-SELECT * 
-FROM users
-WHERE ID = 4;
+  SELECT * 
+  FROM users
+  WHERE id = 4
+
+ 
 
 
