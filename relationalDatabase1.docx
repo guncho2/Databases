@@ -1,2 +1,27 @@
+eduardos-MacBook-Pro:Library eduardolowensohn$ createdb -U postgres library
+Password: 
+eduardos-MacBook-Pro:Library eduardolowensohn$ psql -f /Users/eduardolowensohn/Downloads/library-data.sql library postgres
+Password for user postgres: 
+CREATE TABLE
+INSERT 0 4
+eduardos-MacBook-Pro:Library eduardolowensohn$ psql library postgres
+Password for user postgres: 
+psql (11.5, server 12.0)
+WARNING: psql major version 11, server major version 12.
+         Some psql features might not work.
+Type "help" for help.
+
+library=# SELECT * FROM books;
+  id  |                  title                   |       author        
+------+------------------------------------------+---------------------
+ 1259 | Eloquent Ruby                            | Russell A. Olson
+ 1593 | JavaScript: The Good Parts               | Douglas Crockford
+ 8982 | Designing Object-Oriented Software       | Rebecca Wirfs-Brock
+ 7265 | Practical Object-Oriented Design in Ruby | Sandi Metz
+(4 rows)
+
+library=# 
+
+
 
 
