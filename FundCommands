@@ -27,7 +27,7 @@ Date. Date of any event
 Text. Names in text 
 Timestamp. Time of any event where the product or item was added or modified.
 
-Think through how to create a new table to hold a list of people invited to a wedding. This table needs to have 
+4) Think through how to create a new table to hold a list of people invited to a wedding. This table needs to have 
 first and last name, whether they sent in their RSVP, the number of guests they are bringing, and the number of 
 meals (1 for adults and 1/2 for children).
 
@@ -39,130 +39,229 @@ Whether they sent in their RSVP. boolean
 Number of guests. smallint
 Number of meals.smallint
 
-Write a command that makes the table to track the wedding.
+5) Write a command that makes the table to track the wedding.
 
-CREATE TABLE wedding(
-        id integer,
-        First Name text,
-        RSVP Returned boolean,
-        Number of Guests, smallint,
-        Number of Meals, numeric(1,0.5),
+library=# CREATE TABLE wedding(id integer, firstname text, rsvp boolean, numberofguests smallint, numberofmeals smallint);
 
-);
+library=# SELECT * FROM wedding;
+ id | firstname | rsvp | numberofguests | numberofmeals 
+----+-----------+------+----------------+---------------
+(0 rows)
 
 Using the table we just created, write a command that adds a column to track whether they were sent a thank you card.
 
-ALTER TABLE wedding ADD COLUMN thank you card boolean;
+library=# ALTER TABLE wedding ADD COLUMN thankyoucard boolean;
+
+library=# SELECT * FROM wedding;
+ id | firstname | rsvp | numberofguests | numberofmeals | thankyoucard 
+----+-----------+------+----------------+---------------+--------------
+(0 rows)
+
 
 You have decided to move the data about the meals to another table, so write a command to remove the column storing 
 the number meals from the wedding table.
 
-ALTER TABLE wedding DROP COLUMN Number of meals;
+library=# ALTER TABLE wedding DROP COLUMN numberofmeals;
+
+library=# SELECT * FROM wedding; 
+ id | firstname | rsvp | numberofguests | thankyoucard 
+----+-----------+------+----------------+--------------
+(0 rows)
 
 
-The guests are going to need a place to sit at the reception, so write a command that adds a column for table number.
 
-ALTER TABLE wedding ADD COLUMN table number smallint;
+The guests are going to need a place to sit at the reception, so write a command that adds 
+a column for table number.
 
-The wedding is over and we do not need to keep this information, so write a command that deletes the wedding table from 
-the database.
+library=# ALTER TABLE wedding ADD COLUMN tablenumber smallint;
+ALTER TABLE
 
-ALTER TABLE wedding DROP COLUMN table number;
+library=# SELECT * FROM wedding;
+ id | firstname | rsvp | numberofguests | thankyoucard | tablenumber 
+----+-----------+------+----------------+--------------+-------------
+(0 rows)
 
-Write a command to make a new table to hold the books in a library with the columns ISBN, title, author, genre, publishing date
+
+The wedding is over and we do not need to keep this information, so write a command that
+deletes the wedding table from the database.
+
+
+DROP TABLE wedding;
+
+SELECT * FROM wedding;
+ERROR:  relation "wedding" does not exist
+
+
+5) Write a command to make a new table to hold the books in a library with the columns ISBN, title, author, genre, publishing date
 number of copies, and available copies.
 
-CREATE TABLE books(
-        id integer,
-        ISBN varchar(14),
-        Title text,
-        Author text,
-        Genre text,
-        Publishing date date,
-        Number of copies smallint,
-        Available copies smallint
-);
+CREATE TABLE books(id integer, isbn varchar(15), title text, author text, genre text,
+ publishing_date date, numberof_copies smallint, available_copies smallint);
+
 
 Find three books and add their information to the table.
 
-INSERT INTO books (id, ISBN, Title, Author, Genre, Publishing Date, Number of copies, Available copies) VALUES 
-       (1, 9780385544184, The firm, John Grisham, Suspense, 1991-10-12. 5, 4),
-       (2, 9783466786432, The Client, John Grisham, Suspense, 2001-11-09. 5, 4),
-       (3, 9568273645271, The Partner, John Grisham,  Suspense, 1991-10-12. 5, 4);
+library=# INSERT INTO books(id, isbn, title, author, genre, publishing_date, numberof_copies, available_copies) VALUES (1, 978038554418499, 'The firm', 'John GrishaM', 'Suspense', '1991-10-19', 5, 4);
+INSERT 0 1
+
+library=# SELECT * FROM books;
+ id |      isbn       |  title   |    author    |  genre   | publishing_date | numberof_copies | available_copies 
+----+-----------------+----------+--------------+----------+-----------------+-----------------+------------------
+  1 | 978038554418499 | The firm | John GrishaM | Suspense | 1991-10-19      |               5 |                4
+(1 row)
+
+INSERT INTO books(id, isbn, title, author, genre, publishing_date, numberof_copies,
+ available_copies) VALUES (2, 855429938122019, 'Looking for Jane', 'John Grisham', 'Suspense', '1989-09-11', 6, 2), (3, 855429990289381, 'Mr Walls', 'John Grisham', 'Suspense', '2001-03-09', 2, 4);
+INSERT 0 2
+library=# SELECT * FROM books;
+ id |      isbn       |      title       |    author    |  genre   | publishing_date | numberof_copies | available_copies 
+----+-----------------+------------------+--------------+----------+-----------------+-----------------+------------------
+  1 | 978038554418499 | The firm         | John GrishaM | Suspense | 1991-10-19      |               5 |                4
+  2 | 855429938122019 | Looking for Jane | John Grisham | Suspense | 1989-09-11      |               6 |                2
+  3 | 855429990289381 | Mr Walls         | John Grisham | Suspense | 2001-03-09      |               2 |                4
+(3 rows)
+
+
 
 Someone has just checked out one of the books. Change the available copies column to 1 fewer.
 
-UPDATE books SET Available copies=5 WHERE id=1;
+
+library=# UPDATE books SET available_copies=3 WHERE id=1;
+
+UPDATE 1
+library=# SELECT * FROM books;
+ id |      isbn       |      title       |    author    |  genre   | publishing_date | numberof_copies | available_copies 
+----+-----------------+------------------+--------------+----------+-----------------+-----------------+------------------
+  1 | 978038554418499 | The firm         | John GrishaM | Suspense | 1991-10-19      |               5 |                3
+  2 | 855429938122019 | Looking for Jane | John Grisham | Suspense | 1989-09-11      |               6 |                2
+  3 | 855429990289381 | Mr Walls         | John Grisham | Suspense | 2001-03-09      |               2 |                4
+(3 rows)
+
 
 
 Now one of the books has been added to the banned books list. Remove it from the table.
 
-DELETE FROM books WHERE id=2;
+library=# DELETE FROM books WHERE id=2;
+DELETE 1
+library=# SELECT * FROM books;
+ id |      isbn       |  title   |    author    |  genre   | publishing_date | numberof_copies | available_copies 
+----+-----------------+----------+--------------+----------+-----------------+-----------------+------------------
+  1 | 978038554418499 | The firm | John GrishaM | Suspense | 1991-10-19      |               5 |                3
+  3 | 855429990289381 | Mr Walls | John Grisham | Suspense | 2001-03-09      |               2 |                4
+(2 rows)
 
-Write a command to make a new table to hold spacecrafts. Information should include id, name, year launched, 
+
+6) Write a command to make a new table to hold spacecrafts. Information should include id, name, year launched, 
 
 country of origin, a brief description of the mission, orbiting body, if it is currently operating, and approximate
  miles from Earth. In addition to the table creation, provide commands that perform the following operations:
 
-CREATE TABLE spacecrafts (
-        id integer,
-        Name text,
-        Year year(4),
-        Country text,
-        Mission text,
-        Orbiting Body text,
-        Operational boolean,
-        Distance from Earth bigint,
+library=# CREATE TABLE spacecrafts(id integer, name text, year varchar(4), country text, mission text, orbiting_body text, operational boolean, distance_from_earth bigint);
+CREATE TABLE
+library=# SELECT * FROM spacecrafts;                                                                                  
+ id | name | year | country | mission | orbiting_body | operational | distance_from_earth 
+----+------+------+---------+---------+---------------+-------------+---------------------
+(0 rows)
 
-);
 
 Add 3 non-Earth-orbiting satellites to the table.
 
-INSERT INTO spacecrafts (id, Name, Year, Country, Mission, Orbiting Body, Operational, Distance) VALUES 
-        (1, Delta, 1982, USA, Agricultural Weather, Earth, true, 87000),
-        (2, Alpha2, 1999, USA, CellPhone transmission, Earth, true, 34000)
-        (3, Spazzio, 2013, Europe, Maritime Signals, Earth, false, 0);
+library=# INSERT INTO spacecrafts(id, name, year, country, mission, orbiting_body, operational, distance_from_earth) VALUES 
+        (1, 'Delta', 1982, 'USA', 'Agricultural', 'Earth', true, 87000),
+        (2, 'Alpha', 1999, 'USA', 'CellPhone', 'Earth', true, 34000),
+        (3, 'Spazzio', 2013, 'Europe', 'Earth', 'Maritime Signal', false, 27000);
+INSERT 0 3
+
+
+library=# SELECT * FROM spacecrafts;
+ id |  name   | year | country |   mission    |  orbiting_body  | operational | distance_from_earth 
+----+---------+------+---------+--------------+-----------------+-------------+---------------------
+  1 | Delta   | 1982 | USA     | Agricultural | Earth           | t           |               87000
+  2 | Alpha   | 1999 | USA     | CellPhone    | Earth           | t           |               34000
+  3 | Spazzio | 2013 | Europe  | Earth        | Maritime Signal | f           |               27000
+(3 rows)
+
+
 
 Remove one of the satellites from the table since it has just been crashed into the planet.
 
-DELETE FROM spacecrafts WHERE id=3;
 
+library=# DELETE FROM spacecrafts WHERE id=2;
+DELETE 1
+library=# SELECT * FROM spacecrafts;
+ id |  name   | year | country |   mission    |  orbiting_body  | operational | distance_from_earth 
+----+---------+------+---------+--------------+-----------------+-------------+---------------------
+  1 | Delta   | 1982 | USA     | Agricultural | Earth           | t           |               87000
+  3 | Spazzio | 2013 | Europe  | Earth        | Maritime Signal | f           |               27000
+(2 rows)
 
 Edit another satellite because it is no longer operating and change the value to reflect that.
 
-UPDATE spacecrafts SET Operational=false WHERE id=1;
+library=# UPDATE spacecrafts SET Operational=false WHERE id=1;
+UPDATE 1
+library=# SELECT * FROM spacecrafts;
+ id |  name   | year | country |   mission    |  orbiting_body  | operational | distance_from_earth 
+----+---------+------+---------+--------------+-----------------+-------------+---------------------
+  3 | Spazzio | 2013 | Europe  | Earth        | Maritime Signal | f           |               27000
+  1 | Delta   | 1982 | USA     | Agricultural | Earth           | f           |               87000
+(2 rows)
 
 
-Write a command to make a new table to hold the emails in your inbox. This table should include an id, the subject 
+
+
+7) Write a command to make a new table to hold the emails in your inbox. This table should include an id, the subject 
 line, the sender, any additional recipients, the body of the email, the timestamp, whether or not it’s been read, 
 and the id of the email chain it’s in. Also provide commands that perform the following operations:
 
-CREATE TABLE emails (
-        id integer,
-        Subject text,
-        Sender varchar(200),
-        Body text,
-        Timepstamp timestamp,
-        Read boolean,
-        Email Chain id integer
-)
+inventory=# CREATE TABLE emails(id integer, subject text, sender text, additional_recipients text, body text, time_stamp timestamp, read boolean, email_chainid varchar(2));
+CREATE TABLE
+inventory=# SELECT * FROM emails;
+ id | subject | sender | additional_recipients | body | time_stamp | read | email_chainid 
+----+---------+--------+-----------------------+------+------------+------+---------------
+(0 rows)
+
 
 Add 3 new emails to the inbox.
 
-INSERT INTO emails (id, Subject, Sender, Additional Recipients, Body, Timestamp, Read, Email Chain id)
-		    Values    
-		   (1, University, info@University.com, None , Attached your notes , 2019-10-14 03:14:07, True,  1),
-		    (2, USPS, info@usps.com, None, New Arrivals, 2019-09-12 03:20:07, True, 2) ,
-		    (3, FPL, receipt@fpl.com, None, Attached your recepit from Florida Power and Ligth, 2019-10-09 03:10:07, False, 3);
+inventory=# INSERT INTO emails(id, subject, sender, additional_recipients, body, time_stamp, read, email_chainid) VALUES
+(1, 'University', 'info@University.com', 'edu@tot.com', 'Attached your notes', '2019-10-14 03:14:07', True, 1), 
+(2, 'Hospital', 'info@hospital.com', 'edu@health.com', 'Health Insurance', '2019-10-12 09:32:09', True, 3),
+(3, 'New Investments', 'info@bank.com', 'edu@fianan.com', 'Commodities', '2019-10-11 12:32:34', False, 9);
+INSERT 0 3
+
+
+
 
 You’ve just deleted one of the emails, so write a command to remove the row from the inbox table.
 
 DELETE FROM emails WHERE id=1;
 
+DELETE 1
+inventory=# SELECT * FROM emails;
+ id |     subject     |      sender       | additional_recipients |       body       |     time_stamp      | read | email_chainid 
+----+-----------------+-------------------+-----------------------+------------------+---------------------+------+---------------
+  2 | Hospital        | info@hospital.com | edu@health.com        | Health Insurance | 2019-10-12 09:32:09 | t    | 3
+  3 | New Investments | info@bank.com     | edu@fianan.com        | Commodities      | 2019-10-11 12:32:34 | f    | 9
+(2 rows)
+
+
+
+
 You started reading an email but just heard a crash in another room. Mark the email as unread before investigating, 
 so you can come back to it later.
 
+
 UPDATE emails SET Read=False WHERE id=2;
+
+id |     subject     |      sender       | additional_recipients |       body       |     time_stamp      | read | email_chainid 
+----+-----------------+-------------------+-----------------------+------------------+---------------------+------+---------------
+  3 | New Investments | info@bank.com     | edu@fianan.com        | Commodities      | 2019-10-11 12:32:34 | f    | 9
+  2 | Hospital        | info@hospital.com | edu@health.com        | Health Insurance | 2019-10-12 09:32:09 | f    | 3
+(2 rows)
+
+
+
+
 
 
 
