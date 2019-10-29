@@ -1,0 +1,247 @@
+Exercises
+Answer the following questions and submit the responses in the submission tab.
+
+1. Write out a generic SELECT statement.
+
+  show ids from cars table where the cars are older than 1987 and brands are different of toyota
+
+
+
+2. Create a fun way to remember the order of operations in a SELECT statement, 
+such as a mnemonic.
+  
+  Sometimes for write life has one NULL 
+
+  SELECT
+  FROM
+  WHERE
+  LIKE
+  HAVING
+  ORDER BY
+  IS NULL
+
+
+dogs TABLE:
+
+
+postgres=# SELECT * FROM dogs;
+  id   |   name    | gender | age | weight |       breed        | inteake_date | in_foster  
+-------+-----------+--------+-----+--------+--------------------+--------------+------------
+ 10001 | Boujee    | F      |   3 |     36 | labrador poodle    | 2017-06-22   | 
+ 10002 | Munchkin  | F      |   0 |      8 | dachsund chihuahua | 2017-01-13   | 2017-01-31
+ 10004 | Marley    | M      |   0 |     10 | labrador           | 2017-05-04   | 2016-06-20
+ 10003 | Lassie    | F      |   7 |     17 | collie shepherd    | 2016-07-05   | 2017-01-22
+ 10006 | Marmaduke | M      |   7 |    150 | greate dane        | 2016-03-22   | 2016-05-15
+ 10007 | Rosco     | M      |   5 |    180 | rotweiler          | 2017-04-01   | 
+(6 rows)
+
+
+3. Given this dogs table, write queries to select the following pieces of data:
+  Display the name, gender, and age of all dogs that are part Labrador.
+    
+
+    postgres=# SELECT name, gender, age FROM dogs WHERE breed LIKE '%labrador%';
+  name  | gender | age 
+--------+--------+-----
+ Boujee | F      |   3
+ Marley | M      |   0
+(2 rows)
+
+
+
+  Display the ids of all dogs that are under 1 year old.
+
+    postgres=# SELECT id FROM dogs WHERE age < 1;
+  id   
+-------
+ 10002
+ 10004
+(2 rows)
+
+
+
+  Display the name and age of all dogs that are female and over 35lbs.
+    
+    postgres=# SELECT name, age FROM dogs WHERE gender = 'F' AND weight > 35;
+  name  | age 
+--------+-----
+ Boujee |   3
+(1 row)
+
+
+  Display all of the information about all dogs that are not Shepherd mixes.
+    
+    postgres=# SELECT * FROM dogs WHERE breed NOT LIKE '%shepherd%';
+  id   |   name    | gender | age | weight |       breed        | inteake_date | in_foster  
+-------+-----------+--------+-----+--------+--------------------+--------------+------------
+ 10001 | Boujee    | F      |   3 |     36 | labrador poodle    | 2017-06-22   | 
+ 10002 | Munchkin  | F      |   0 |      8 | dachsund chihuahua | 2017-01-13   | 2017-01-31
+ 10004 | Marley    | M      |   0 |     10 | labrador           | 2017-05-04   | 2016-06-20
+ 10006 | Marmaduke | M      |   7 |    150 | greate dane        | 2016-03-22   | 2016-05-15
+ 10007 | Rosco     | M      |   5 |    180 | rotweiler          | 2017-04-01   | 
+(5 rows)
+
+
+  Display the id, age, weight, and breed of all dogs that are either over 60lbs or 
+  Great Danes.
+  
+
+   postgres=# SELECT id, weight, id, breed FROM dogs where WEIGHT > 60 OR breed = '%grate dane%';
+  id   | weight |  id   |    breed    
+-------+--------+-------+-------------
+ 10006 |    150 | 10006 | greate dane
+ 10007 |    180 | 10007 | rotweiler
+(2 rows)
+
+4
+
+cats table:
+
+postgres=# INSERT INTO cats (id, name, gender, age, intake_date, adoption_date) VALUES (1, 'Mushi', 'M', 1, '2016-01-09', '2016-03-22'), (2, 'Seashell', 'F', 7, '2016-01-09', NULL), (3, 'Azul', 'M', 3, '2016-01-11', '2016-04-17'), (4, 'Victorie', 'M', 7, '2016-01-11', '2016-09-01'), (5, 'Nala', 'F', 1, '2016-01-12', NULL);
+INSERT 0 5
+postgres=# SELECT * FROM cats;
+ id |   name   | gender | age | intake_date | adoption_date 
+----+----------+--------+-----+-------------+---------------
+  1 | Mushi    | M      |   1 | 2016-01-09  | 2016-03-22
+  2 | Seashell | F      |   7 | 2016-01-09  | 
+  3 | Azul     | M      |   3 | 2016-01-11  | 2016-04-17
+  4 | Victorie | M      |   7 | 2016-01-11  | 2016-09-01
+  5 | Nala     | F      |   1 | 2016-01-12  | 
+(5 rows)
+
+
+
+4. Given this cats table, what records are returned from these queries?
+  postgres=# SELECT name, adoption_date FROM cats;
+   name   | adoption_date 
+----------+---------------
+ Mushi    | 2016-03-22
+ Seashell | 
+ Azul     | 2016-04-17
+ Victorie | 2016-09-01
+ Nala     | 
+(5 rows)
+
+postgres=# SELECT name, age FROM cats;
+   name   | age 
+----------+-----
+ Mushi    |   1
+ Seashell |   7
+ Azul     |   3
+ Victorie |   7
+ Nala     |   1
+(5 rows)
+
+
+
+  
+
+5. From the cats table, write queries to select the following pieces of data.
+
+  Display all the information about all of the available cats.
+    
+    postgres=# SELECT * FROM cats WHERE adoption_date IS NOT NULL;
+ id |   name   | gender | age | intake_date | adoption_date 
+----+----------+--------+-----+-------------+---------------
+  1 | Mushi    | M      |   1 | 2016-01-09  | 2016-03-22
+  3 | Azul     | M      |   3 | 2016-01-11  | 2016-04-17
+  4 | Victorie | M      |   7 | 2016-01-11  | 2016-09-01
+(3 rows)
+
+
+
+  Display the name and sex of all cats who are 7 years old.
+   
+   postgres=# SELECT name, gender FROM cats WHERE age = 7;
+   name   | gender 
+----------+--------
+ Seashell | F
+ Victorie | M
+(2 rows)
+
+
+  Find all of the names of the cats, so you don’t choose duplicate names 
+  for new cats.
+
+   postgres=# SELECT DISTINCT name FROM cats; 
+   name   
+----------
+ Victorie
+ Seashell
+ Mushi
+ Nala
+ Azul
+(5 rows)
+
+
+
+6. List each comparison operator and explain, in your own words, when you 
+would use it. Include a real world example for each.
+
+    >= Greater than or equal to, used when comparing 2 values
+      example: WHERE age >= 3 
+
+    <> / != Not equal to, used when comparing 2 values
+     example: WHERE adoption_date <> intake_date 
+
+    LIKE is used when match or not a data examle: WHERE breed NOT LIKE '%shepherd%';
+    
+   BETWEEN is used to arrange data betwen 2 parameters, example WHERE age BETWEEN 1 and 9;
+
+   IS DISTINCT FROM, is used when comparing one expression to other example : SELECT DISTINCT name FROM cats;
+
+   IS TRUE / IS FALSE when one of the data is null, example: WHERE adpopt_date IS NULL;
+
+   IS NULL / IS NOT NULL Determines if the contents of a cell are null or not.
+      [...WHERE model IS NULL ]
+
+ > Greater than, used when comparing 2 values
+      example: WHERE age > 3 
+    < Less than, used when comparing 2 values
+      example: WHERE age < 3 
+    = Equal to, used when comparing 2 values
+      example: WHERE age = 3 
+    <= Less than or equal to, used when comparing 2 values
+      example: WHERE age <= 3 
+
+   AND Requires both expressions to be true for the row to be returned.
+       example: WHERE age  = 5 AND weight = 20;
+
+   OR Requires one of the expressions to be true for the row to be returned
+      [...WHERE age  = 5 OR weight = 20;
+
+      NOT Requires the expression to be false for the row to be returned
+      [...WHERE  weight not 20; 
+
+
+
+
+
+7. From the cats table, what data is returned from these queries?
+ 
+ postgres=# SELECT name FROM cats WHERE gender = 'F';
+   name   
+----------
+ Seashell
+ Nala
+(2 rows)
+
+
+  postgres=# SELECT name FROM cats WHERE age <> 3;
+   name   
+----------
+ Mushi
+ Seashell
+ Victorie
+ Nala
+(4 rows)
+
+
+
+  postgres=# SELECT id FROM cats WHERE name != 'Mushi' AND gender = 'M';
+ id 
+----
+  3
+  4
+(2 rows)
+
