@@ -1,0 +1,435 @@
+How do you find related data that is held in two separate data tables?
+
+With JOIN combining two or more tables
+
+
+Explain, in your own words, the difference between a CROSS JOIN, INNER JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, and FULL
+ OUTER JOIN. Give a real world example for each.
+
+ CROSS JOIN output all combinations of table 1 and 2  reulting of a new table containing all rows from table 1 and two.
+ In a restaurant database containing a supplier table and products table,
+
+
+      I want to see every supplier and product combination.
+
+ INNER JOIN is a default JOIN where table1 has a row for each of the rows in table2 that satisfy the JOIN constition in table1
+
+ Would show me only Coke from suppliers (and only suppliers that have Coke).
+
+ LEFT OUTER JOIN combine two tables with INNER JOIN where for each row in table one that dont satisfy the JOIN consition in table two a new row is created in 
+ the resulted table with NULL value from table two, and  have at least one row for each row in table1.
+
+if LEFT is a supplier show me all suppliers and which products are on that suppliers if there is some.
+
+ RIGHT OUTER JOIN combine two tables with INNER JOIN where all rows that is not matching the JOIN CONDITION with any of the rows in table one a new row is created in the 
+ resulted table with the NULL value in columns of table one, and will have a row for each row in table two.
+
+if LEFT is suppliers show me all products and if thy are on a supplier or not
+
+
+ FULLL OUTER JOIN is a combination of RIGHT OUTER JOIN and LEFT OUTER JOIN, result in a table that gives a NULL row value if there is not JOIN CONDITION satisfied from table two
+ and at least one row for each row from table one. Also for every row in table two that not meet the JOIN CONDITION with any of the row in table one a row is added to the resulted
+ table with NULLvalued from table one
+
+I want to see suppliers and their products and also products that have
+      no suppliers and suppliers that have no products.
+
+
+
+Define primary key and foreign key. Give a real world example for each. 
+
+supplier table has an id (primary key), products table has a product_id (foreign_key).
+
+ Accounting department combines the 
+  employee table (primary key = employee_id) with the 
+  earnings table (foreign key = employee_id) to print W-2 statements.  
+
+
+ Primary key relates directly to the table, whereas a foreign key is a value shared
+    by another table's primary key. A foreign key is equal
+  to the primary key but it's located in another table and used to map back
+  to the table row containing the primary key.
+
+
+    
+
+
+Define aliasing.
+
+Is to create a short variable table name, in a query.
+
+
+
+Change this query so that you are using aliasing:
+
+
+
+
+SELECT professor.name, compensation.salary, compensation.vacation_days FROM professor 
+JOIN compensation 
+ON professor.id = compensation.professor_id;
+
+SELECT p.name, c.salary, c.vacation_days FROM professor AS p
+JOIN compensation AS c
+ON p.id = c.professor_id;
+
+
+
+
+Why would you use a NATURAL JOIN? Give a real world example.
+
+An Ford Dealer store has a stock table with columns:
+
+    stock_id integer,
+    make text,
+    model text,
+    in_service date
+
+  and a maintenance table with columns:
+
+    last_service_date date,
+    last_description text,
+    next_service_date date,
+    next_description text,
+    stock_id integer
+
+  SELECT * 
+  FROM stock
+  NATURAL JOIN maintenance;
+
+  Output will be columns:
+    stock_id, make, model, in_service, last_service_date, last_description, next_service_date, next_description
+
+
+Using this Employee schema and data, write queries to find the following information:
+
+
+
+
+All employees with their shifts if they have any. Also include any unscheduled shifts.
+
+SELECT *
+    FROM shifts
+    LEFT OUTER JOIN scheduled_shifts 
+    ON scheduled_shifts.shift_id = shifts.id
+    ORDER BY scheduled_shifts.employee_id;
+
+Query #1 Execution time: 1ms
+id	date	start_time	end_time	employee_id	shift_id
+2	1998-03-09	08:00:00	16:00:00	1	2
+7	1998-03-10	08:00:00	16:00:00	1	7
+12	1998-03-11	08:00:00	16:00:00	1	12
+17	1998-03-12	08:00:00	16:00:00	1	17
+22	1998-03-13	08:00:00	16:00:00	1	22
+8	1998-03-10	12:00:00	16:00:00	2	8
+18	1998-03-12	12:00:00	16:00:00	2	18
+3	1998-03-09	12:00:00	16:00:00	3	3
+13	1998-03-11	12:00:00	16:00:00	3	13
+23	1998-03-13	12:00:00	16:00:00	3	23
+15	1998-03-11	16:00:00	20:00:00	4	15
+20	1998-03-12	16:00:00	20:00:00	4	20
+25	1998-03-13	16:00:00	20:00:00	4	25
+4	1998-03-09	12:00:00	20:00:00	5	4
+9	1998-03-10	12:00:00	20:00:00	5	9
+14	1998-03-11	12:00:00	20:00:00	5	14
+1	1998-03-09	08:00:00	12:00:00	5	1
+6	1998-03-10	08:00:00	12:00:00	5	6
+11	1998-03-11	08:00:00	12:00:00	5	11
+19	1998-03-12	12:00:00	20:00:00	8	19
+24	1998-03-13	12:00:00	20:00:00	8	24
+5	1998-03-09	16:00:00	20:00:00	9	5
+10	1998-03-10	16:00:00	20:00:00	9	10
+21	1998-03-13	08:00:00	12:00:00	null	null
+16	1998-03-12	08:00:00	12:00:00	null	null
+
+
+
+
+
+Using this Adoption schema and data, please write queries to retrieve the following information and include the results:
+
+
+
+
+All volunteers. If the volunteer is fostering a dog, include each dog as well.
+
+SELECT * 
+        FROM volunteers AS v
+        LEFT OUTER JOIN dogs AS d
+        ON v.foster_dog_id = d.id
+        ORDER BY v.id;
+
+
+ id | first_name | last_name  |          address           | phone_number | available_to_foster | foster_dog_id |  id   |   name    | gender | age | weight |       breed        | intake_date | in_foster 
+----+------------+------------+----------------------------+--------------+---------------------+---------------+-------+-----------+--------+-----+--------+--------------------+-------------+-----------
+  1 | Albus      | Dumbledore | 99 Godric's Hollow         | 843-746-3649 | f                   |               |       |           |        |     |        |                    |             | 
+  2 | Rubeus     | Hagrid     | 1 Edge of Forbidden Forest | 256-667-2378 | t                   |         10002 | 10002 | Munchkin  | F      |   0 |      8 | dachsund chihuahua | 2017-01-13  | 
+  3 | Remus      | Lupin      | 12 Grimmauld Place         | 627-283-3771 | t                   |               |       |           |        |     |        |                    |             | 
+  4 | Sirius     | Black      | 12 Grimmauld Place         | 878-666-4663 | t                   |               |       |           |        |     |        |                    |             | 
+  5 | Marjorie   | Dursley    | 1990 Next Door to Fubster  | 463-528-2253 | t                   |         10006 | 10006 | Marmaduke | M      |   7 |    150 | great dane         | 2016-03-22  | 
+(5 rows)
+
+
+
+
+
+
+The cat's name, adopter's name, and adopted date for each cat adopted within the past month to be displayed as part of the
+ "Happy Tail" social media promotion which posts recent successful adoptions.
+
+
+       postgres=#         SELECT a.first_name, 
+postgres-#                 a.last_name, 
+postgres-#                 ca.date, 
+postgres-#                 c.name
+postgres-#             FROM cat_adoptions AS ca
+postgres-#             JOIN cats AS c
+postgres-#             ON c.id = ca.cat_id
+postgres-#             JOIN adopters AS a
+postgres-#             ON a.id = ca.adopter_id
+postgres-#             WHERE ca.date > CURRENT_DATE - INTERVAL '30 DAYS';
+ first_name | last_name |    date    |   name   
+------------+-----------+------------+----------
+ Arabella   | Figg      | 2019-10-20 | Mushi
+ Argus      | Filch     | 2019-10-25 | Victoire
+(2 rows)
+
+
+
+Adopters who have not yet chosen a dog to adopt and generate all possible combinations of adopters and available dogs.
+
+SELECT adopters.id AS adopter_id, 
+postgres-#                 adopters.first_name, 
+postgres-#                 adopters.last_name, 
+postgres-#                 dogs.id AS dogs_id, 
+postgres-#                 dogs.name AS dogs_name
+postgres-#             FROM adopters
+postgres-#             FULL OUTER JOIN dog_adoptions 
+postgres-#             ON dog_adoptions.adopter_id = adopters.id
+postgres-#             CROSS JOIN dogs
+postgres-#             WHERE dog_adoptions.adopter_id IS NULL AND 
+postgres-#               dogs.id NOT IN (
+postgres(#                   SELECT dog_adoptions.dog_id 
+postgres(#                   FROM dog_adoptions)
+postgres-#             ORDER BY adopters.id, dogs.id;
+ adopter_id | first_name | last_name | dogs_id | dogs_name 
+------------+------------+-----------+---------+-----------
+          1 | Hermione   | Granger   |   10001 | Boujee
+          1 | Hermione   | Granger   |   10002 | Munchkin
+          1 | Hermione   | Granger   |   10003 | Lassie
+          1 | Hermione   | Granger   |   10004 | Marley
+          1 | Hermione   | Granger   |   10006 | Marmaduke
+          2 | Arabella   | Figg      |   10001 | Boujee
+          2 | Arabella   | Figg      |   10002 | Munchkin
+          2 | Arabella   | Figg      |   10003 | Lassie
+          2 | Arabella   | Figg      |   10004 | Marley
+          2 | Arabella   | Figg      |   10006 | Marmaduke
+(10 rows)
+
+
+
+
+Lists of all cats and all dogs who have not been adopted.
+
+postgres=# SELECT cats.id, cats.name, cat_adoptions.adopter_id
+postgres-#     FROM cats
+postgres-#     LEFT OUTER JOIN cat_adoptions ON cats.id = cat_adoptions.cat_id
+postgres-#     WHERE cat_adoptions.adopter_id IS NULL;
+ id |   name   | adopter_id 
+----+----------+------------
+  2 | Seashell |           
+  5 | Nala     |           
+(2 rows)
+
+postgres=# SELECT dogs.id, dogs.name, dog_adoptions.adopter_id
+postgres-#     FROM dogs
+postgres-#     LEFT OUTER JOIN dog_adoptions ON dogs.id = dog_adoptions.dog_id
+postgres-#     WHERE dog_adoptions.adopter_id IS NULL;
+  id   |   name    | adopter_id 
+-------+-----------+------------
+ 10002 | Munchkin  |           
+ 10001 | Boujee    |           
+ 10003 | Lassie    |           
+ 10004 | Marley    |           
+ 10006 | Marmaduke |           
+(5 rows)
+
+
+
+Volunteers who are available to foster. If they currently are fostering a dog, include the dog. Also include all dogs
+ who are not currently in foster homes.
+
+postgres=#   SELECT v.id AS volunteer_id, 
+postgres-#                 v.first_name, 
+postgres-#                     v.last_name, 
+postgres-#                     v.available_to_foster, 
+postgres-#                     v.foster_dog_id, 
+postgres-#                     d.name AS dog_name
+postgres-#             FROM volunteers AS v
+postgres-#             FULL OUTER JOIN dogs AS d 
+postgres-#             ON d.id = v.foster_dog_id
+postgres-#             WHERE v.available_to_foster IS true OR d.id IS NOT NULL
+postgres-#             ORDER BY 1;
+ volunteer_id | first_name | last_name | available_to_foster | foster_dog_id | dog_name  
+--------------+------------+-----------+---------------------+---------------+-----------
+            2 | Rubeus     | Hagrid    | t                   |         10002 | Munchkin
+            3 | Remus      | Lupin     | t                   |               | 
+            4 | Sirius     | Black     | t                   |               | 
+            5 | Marjorie   | Dursley   | t                   |         10006 | Marmaduke
+              |            |           |                     |               | Boujee
+              |            |           |                     |               | Rosco
+              |            |           |                     |               | Lassie
+              |            |           |                     |               | Marley
+(8 rows)
+
+
+
+
+
+
+
+    
+
+
+
+The name of the person who adopted Rosco.
+
+ postgres=# SELECT adopter_id, 
+postgres-#                 adopters.first_name, 
+postgres-#                 adopters.last_name, 
+postgres-#                 dogs.name AS dog_name
+postgres-#             FROM dog_adoptions
+postgres-#             JOIN adopters 
+postgres-#             ON adopters.id = dog_adoptions.adopter_id
+postgres-#             JOIN dogs 
+postgres-#             ON dogs.id = dog_adoptions.dog_id
+postgres-#             WHERE dogs.name = 'Rosco';
+ adopter_id | first_name | last_name | dog_name 
+------------+------------+-----------+----------
+          3 | Argus      | Filch     | Rosco
+(1 row)
+
+
+
+Using this Library schema and data, write queries applying the following scenarios:
+
+
+To determine if the library should buy more copies of a given book, please provide the names and position, in order, 
+of all of the patrons with a hold (request for a book with all copies checked out) on "Advanced Potion-Making".
+
+
+postgres=#  SELECT patrons.name, 
+postgres-#                 holds.rank, 
+postgres-#                 books.title
+postgres-#             FROM holds
+postgres-#             LEFT OUTER JOIN patrons 
+postgres-#             ON patrons.id = holds.patron_id
+postgres-#             LEFT OUTER JOIN books 
+postgres-#             ON books.isbn = holds.isbn
+postgres-#             WHERE books.title = 'Advanced Potion-Making'
+postgres-#             ORDER BY 2;
+      name      | rank |         title          
+----------------+------+------------------------
+ Terry Boot     |    1 | Advanced Potion-Making
+ Cedric Diggory |    2 | Advanced Potion-Making
+(2 rows)
+
+
+
+
+
+
+
+Make a list of all book titles and denote whether or not a copy of that book is checked out.
+
+
+postgres=# 
+postgres=#         SELECT books.title, 
+postgres-#                 transactions.checked_out_date,
+postgres-#                 transactions.checked_in_date
+postgres-#             FROM books
+postgres-#             INNER JOIN transactions 
+postgres-#             ON transactions.isbn = books.isbn
+postgres-#             order by 1, 2;
+                  title                  | checked_out_date | checked_in_date 
+-----------------------------------------+------------------+-----------------
+ Advanced Potion-Making                  | 2013-11-08       | 2013-11-09
+ Advanced Potion-Making                  | 2019-11-06       | 
+ Fantastic Beasts and Where to Find Them | 2013-11-08       | 2013-11-09
+ Fantastic Beasts and Where to Find Them | 2019-11-02       | 2019-11-05
+ Fantastic Beasts and Where to Find Them | 2019-11-06       | 2019-11-08
+ Fantastic Beasts and Where to Find Them | 2019-11-08       | 
+ Hogwarts: A History                     | 2013-11-08       | 2013-11-09
+(7 rows)
+
+
+
+
+
+
+
+
+In an effort to learn which books take longer to read, the librarians would like you to create a list of average checked out 
+time by book name in the past month.
+
+postgres=#     SELECT books.title, 
+postgres-#                 AVG(transactions.checked_in_date - transactions.checked_out_date)
+postgres-#             FROM books
+postgres-#             LEFT OUTER JOIN transactions 
+postgres-#             ON transactions.isbn = books.isbn
+postgres-#             WHERE transactions.checked_out_date > CURRENT_DATE - INTERVAL '30 DAYS' AND transactions.checked_in_date IS NOT NULL
+postgres-#             GROUP BY books.title;
+                  title                  |        avg         
+-----------------------------------------+--------------------
+ Fantastic Beasts and Where to Find Them | 2.5000000000000000
+(1 row)
+
+
+
+
+
+
+
+In order to learn which items should be retired, make a list of all books that have not been checked out in the past 5 years.
+
+
+
+postgres=# SELECT books.title, 
+postgres-#                 transactions.checked_out_date
+postgres-#             FROM books
+postgres-#             LEFT OUTER JOIN transactions 
+postgres-#             ON transactions.isbn = books.isbn
+postgres-#             GROUP BY books.title, books.isbn, transactions.checked_out_date
+postgres-#             HAVING transactions.checked_out_date < CURRENT_DATE - INTERVAL '5 YEARS';
+                  title                  | checked_out_date 
+-----------------------------------------+------------------
+ Hogwarts: A History                     | 2013-11-08
+ Fantastic Beasts and Where to Find Them | 2013-11-08
+ Advanced Potion-Making                  | 2013-11-08
+(3 rows)
+
+
+
+
+
+List all of the library patrons. If they have one or more books checked out, correspond the books to the patrons.
+
+
+postgres=#    SELECT p.id, p.name, t.isbn, b.title, t.checked_out_date, t.checked_in_date
+postgres-#     FROM patrons AS p
+postgres-#     RIGHT OUTER JOIN transactions AS t ON p.id = t.patron_id
+postgres-#     RIGHT OUTER JOIN books AS b ON b.isbn = t.isbn
+postgres-#     ORDER BY p.id;
+ id |       name       |    isbn    |                  title                  | checked_out_date | checked_in_date 
+----+------------------+------------+-----------------------------------------+------------------+-----------------
+  1 | Hermione Granger | 3458400871 | Fantastic Beasts and Where to Find Them | 2019-11-06       | 2019-11-08
+  1 | Hermione Granger | 1840918626 | Hogwarts: A History                     | 2013-11-08       | 2013-11-09
+  2 | Terry Boot       | 9136884926 | Advanced Potion-Making                  | 2019-11-06       | 
+  2 | Terry Boot       | 3458400871 | Fantastic Beasts and Where to Find Them | 2013-11-08       | 2013-11-09
+  3 | Padma Patil      | 3458400871 | Fantastic Beasts and Where to Find Them | 2019-11-02       | 2019-11-05
+  4 | Cho Chang        | 9136884926 | Advanced Potion-Making                  | 2013-11-08       | 2013-11-09
+  5 | Cedric Diggory   | 3458400871 | Fantastic Beasts and Where to Find Them | 2019-11-08       | 
+(7 rows)
+
+
+
