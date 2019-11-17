@@ -1,0 +1,172 @@
+                Create a database for the model we built in the example. Create a SQL file that creates the tables and inserts sample data
+ (the questions below will help you create the data). Submit queries to find the following information and include the results:
+
+A guest who exists in the database and has not booked a room.
+hotel=# SELECT guests.name
+            FROM guests 
+            LEFT JOIN booking ON guests.id = booking.guest_id
+            WHERE booking.guest_id IS NULL;
+ name 
+------
+ eDU
+(1 row)
+
+
+
+Bookings for a guest who has booked two rooms for the same dates.
+
+hotel=# SELECT guests.name, 
+                booking.check_in_date, 
+                    COUNT(*) AS rooms_booked 
+            FROM booking  
+            JOIN guests 
+            ON booking.guest_id = guests.id 
+            GROUP BY 1, 2 
+            HAVING count(*) = 2;
+  name  | check_in_date | rooms_booked 
+--------+---------------+--------------
+ Charly | 2019-10-09    |            2
+(1 row)
+
+
+
+Bookings for a guest who has booked one room several times on different dates.
+
+hotel=# SELECT b1.room_number,
+            b1.guest_id,
+                b1.check_in_date,
+                b2.check_in_date
+        FROM booking b1
+        INNER JOIN booking b2 
+          ON b1.room_number = b2.room_number 
+            AND b1.guest_id = b2.guest_id 
+            AND b1.check_in_date != b2.check_in_date
+        GROUP BY 1, 2, 3, 4 
+        HAVING b1.check_in_date < b2.check_in_date
+        ORDER BY 1, 2;
+ room_number | guest_id | check_in_date | check_in_date 
+-------------+----------+---------------+---------------
+         301 |        3 | 2019-07-22    | 2019-08-29
+         402 |        1 | 2018-04-13    | 2018-11-13
+(2 rows)
+
+
+
+
+The number of unique guests who have booked the same room.
+
+hotel=# SELECT COUNT(DISTINCT guests.id) AS "num_guests", room.id AS "room_id"
+FROM booking
+JOIN guests
+ON guests.id = booking.guest_id
+RIGHT JOIN room
+ON booking.room_id = room.id
+GROUP BY (room.id);
+
+
+ num_guests | room_id 
+------------+---------
+          1 |     901
+          1 |     902
+          2 |     903
+          3 |     904
+
+
+
+
+Design a data model for students and the classes they have taken. The model should include 
+the students' grades for a given class.
+
+Work through the questions from the example above.
+
+Document any assumptions you make about what data should be stored, what data types 
+should be used, etc., and include them in a text file.
+
+Ask questions of your mentor in your next session if you are unsure about parts of 
+your model.
+
+Draw the model using the notation used in the checkpoint and submit a picture. You can
+ also use a tool like StarUML or 
+quickdatabasediagrams.com if you choose.
+
+
+
+
+Build a database for the students/classes data model. Create a SQL file that creates the 
+tables and inserts sample 
+data (the questions below will help you create the data). Submit queries for the following
+ data and include the results:
+
+All students who have taken a particular class.
+
+
+
+school=# SELECT students.student_name, grades.student_id, class.class_name FROM class JOIN grades USING (class_id) JOIN students USING (student_id) WHERE (class.class_name = 'Algebra') GROUP BY (students.student_name, class.class_name, grades.student_id);
+ student_name | student_id | class_name 
+--------------+------------+------------
+ Charly       |          1 | Algebra
+ Edward       |          2 | Algebra
+ Mike         |          5 | Algebra
+ Paul         |          3 | Algebra
+ Tom          |          4 | Algebra
+(5 rows)
+
+
+
+
+The number of each grade (using letter grades A-F) earned in a particular class.
+
+school=# SELECT COUNT(grades.grade), grades.grade, class.class_name
+FROM grades
+JOIN class
+USING (class_id)
+WHERE class_id = 102
+GROUP BY (class.class_name, grades.grade);
+ count | grade | class_name 
+-------+-------+------------
+     3 | A     | Geography
+     1 | B     | Geography
+     1 | C     | Geography
+     1 | D     | Geography
+(4 rows)
+
+
+
+
+Class names and the total number of students who have taken each class in the list.
+
+
+school=# SELECT class.class_name, COUNT(DISTINCT grades.student_id)
+FROM grades
+JOIN class
+USING (class_id)
+GROUP BY (class.class_name);
+ class_name | count 
+------------+-------
+ Algebra    |     5
+ Assembler  |     3
+ Geography  |     6
+ History    |     6
+ Linux      |     1
+ Math       |     4
+ Philosphy  |     2
+ Pogramming |     4
+(8 rows)
+
+
+
+The class taken by the largest number of students.
+
+school=# SELECT class.class_name, COUNT(DISTINCT grades.student_id) AS student_count
+FROM grades
+JOIN class
+USING (class_id)
+GROUP BY (class.class_name)
+ORDER BY (class.class_name) DESC
+LIMIT 1;
+ class_name | student_count 
+------------+---------------
+ Pogramming |             5
+(1 row)
+
+
