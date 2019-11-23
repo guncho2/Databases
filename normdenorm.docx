@@ -1,0 +1,82 @@
+In your own words, explain the benefits of normalization. Include a real-world scenario where
+ normalization is necessary.
+
+The benefits are, reduce the data duplication, which prevents mistakes and data insconsistences. Optimizing th querries because the tables are
+structured more logically which makes the querries work more efficiently using joins. Also dividing the tables in other tables using superkeys
+tables have less columns, which derives in faster indexes creations and sorting. As the tables have fewer indexes improves the updates. 
+
+A supermarket has a product table with prduct_id name quantity price location_id and city, country and orders_per_product and a supermarket accountant wants to
+know the  orders_per_product by location_id. We should divide theprevious table in: product table  with the product_id, name, price orders_per_product
+and a second table with product_id, location_id, name, and orders_per_product.
+
+
+List and explain the different normal forms and how they relate to one another, with regard to your 
+real-world scenario in the first question.
+
+1NF requires no column could have multiple values.
+
+At product table name should have only one name product at the name column so we have to add necessary rows for every name column that has more
+than one mame at thr name column.
+
+Tables have to be in N1F
+2NF
+
+All the non key attributes cannot be dependent of the subset of the primary keys.
+
+On 1NF  price and product_id on product table are dependent but are not dependent with location_id city and country. To fix it we divide the table product
+in product table with product_id price and name and another table location_id with product_id and location_id, city and country.
+
+Tables have to be in N2F
+3NF
+We wants to know the city of every product but location_id depends from city and city by product_id at the 2NF table 
+so we can devide the original product table in: product table with product_id name and city and country and a second table with city and location_id
+
+BCNF
+
+Must be in 3NF
+
+For every dependency X -> Y X have to be a superKey which identify all the other attributes
+
+Name depends from product_id  city and country depends from location_id, so we have to devide the table in:
+product table wich have product_id and name,
+location table which have city, country and location_id
+and 3rd table:
+prduct_id and location_id
+
+
+
+
+This student_records table contains students and their grades in different subjects. The schema is already in first normal 
+form (1NF). Convert this schema to the third normal form (3NF) using the techniques you learned in this checkpoint.
+
+@ student_records.docx
+
+In your own words, explain the potential disadvantages of normalizing the data above. What are its trade-offs? Submit your 
+findings in the submission table and discuss them with your mentor in your next session.
+
+normalizing those tables will take more time to querry and find different elements becasue there are many tables dividing
+the information and join querries will be needed many times for the different tables to find ex: find a grade from a specific email or srident_id
+or find a professor name where the subject has specific quantities of B grade grouping by student name.
+
+
+Looking at the tables you have normalized. If you need to denormalize to improve query performance or speed up reporting, 
+how would you carry out denormalization for this database design? Submit potential strategies in the submission tab and discuss
+ them with your mentor in your next session.
+
+Going back to a students Table where Ill have name student_id name email, a grades table with an id and grade and professor table with professor_id
+name and subject.
+
+
+
+
+Explore the trade-offs between data normalization and denormalization in this scenario, submit your findings in the submission
+ tab, and discuss them with your mentor in your next session.
+
+On studdents Table normalization clear the tables view for joining and finding different combination of attributes with no repetitives
+data and a more structured data, however will take more time at a case of delete insert or join.That trade off is important at the time to 
+balance time vs space in a database. Depending the type of data, application and security we can choose to be slower but more structured,
+secure and save more space or be faster, with less integrity and dont worry about space at the database. Normaizing also tradoff time but
+at the time to implement different applications with the same databas eand tables is much better to leave a normailzed and divided tables space
+those differents applications can process those data with no mistakes or less mistakes.
+
+

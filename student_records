@@ -1,0 +1,68 @@
+CREATE TABLE student_records (
+  "id"       INTEGER,
+  "student_id"     INTEGER,
+  "student_email"  VARCHAR(24),
+  "student_name"   VARCHAR(9),
+  "professor_id"   INTEGER,
+  "professor_name" VARCHAR(9),
+  "subject"        VARCHAR(11),
+  "grade"          VARCHAR(1)
+);
+    
+INSERT INTO student_records
+    ("id", "student_id", "student_email",            "student_name", "professor_id", "professor_name", "subject",     "grade")
+
+
+
+
+
+
+    to 2NF
+
+    CREATE TABLE students (
+            student_id INTEGER,
+            student_email VARCHAR(24),
+            student_name  VARCHAR(9)
+    );
+
+    CREATE TABLE proffesor (
+            professor_id INTEGER,
+            professor_name VARCHAR(9),
+            subject VARCHAR(11)
+    );
+
+    CREATE TABLE grades (
+            grade VARCHAR(1),
+            student_id INTEGER,
+            professor_id INTEGER
+
+    );
+
+to 3NF
+
+    CREATE TABLE students (
+            student_id INTEGER,
+            student_email VARCHAR(24),
+            student_name  VARCHAR(9)
+    );
+
+    CREATE TABLE proffesor (
+            professor_id INTEGER,
+            professor_name VARCHAR(9)
+    );
+
+    CREATE TABLE subject (
+            subject VARCHAR(11)
+    )
+
+    CREATE TABLE grades (
+            id INTEGER,
+            grade VARCHAR(1),
+            student_id INTEGER,
+            professor_id INTEGER,
+            subject VARCHAR(11)
+    );
+
+
+
+

@@ -101,7 +101,11 @@ All students who have taken a particular class.
 
 
 
-school=# SELECT students.student_name, grades.student_id, class.class_name FROM class JOIN grades USING (class_id) JOIN students USING (student_id) WHERE (class.class_name = 'Algebra') GROUP BY (students.student_name, class.class_name, grades.student_id);
+school=# SELECT students.student_name, grades.student_id, class.class_name 
+FROM class
+ JOIN grades USING (class_id) JOIN students USING (student_id)
+  WHERE (class.class_name = 'Algebra')
+   GROUP BY (students.student_name, class.class_name, grades.student_id);
  student_name | student_id | class_name 
 --------------+------------+------------
  Charly       |          1 | Algebra
