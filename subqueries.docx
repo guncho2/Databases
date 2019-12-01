@@ -1,0 +1,279 @@
+1 Explain a subquery in your own words.
+
+        Itsa query which nest a SELECT clause inside another SELECT clause. It works likea Join clause which generally
+         workswith the WHERE clause. Subquerry also utilze FROM.
+
+
+2 Where can you use a subquery within a SELECT statement?
+
+
+
+It could be used anywhere with FROM WHERE and SELECT and can use their own JOIN clause.
+In an aggregation forexample in a SUM or AVERAGE clause.                
+
+3 When would you employ a subquery?
+
+It can be found mostly on the WHERE clause and when the coder wants to get data from the main querry SELECT based on the conditional statement from the 
+child or SELECT subquerry.
+
+
+4 Explain a row constructor in your own words.
+
+A row constructor build a row passing the arguments for the fields, and  verifying the existence of a row using the values already existed.
+
+5 What happens if a row in the subquery result provides a NULL value to the comparison?
+
+The result on the subquerry will be NULL
+
+6 What are the ways to use a subquery within a WHERE clause? If you can't remember them, do these flashcards until you can.
+
+ALL, IN, NOT IN, ANY, SOME, NOT EXIST, EXIST
+
+7 Using this Adoption schema and data, please write queries to retrieve the following information and include the results:
+
+
+ a) All volunteers. If the volunteer is fostering a dog, include each dog as well.
+
+postgres=# SELECT v.first_name, v.last_name, d.name AS dog
+postgres-# FROM volunteers AS v
+postgres-# LEFT JOIN
+postgres-# (SELECT id, name FROM dogs) d
+postgres-# ON d.id = v.foster_dog_id;
+ first_name | last_name  |    dog    
+------------+------------+-----------
+ Rubeus     | Hagrid     | Munchkin
+ Marjorie   | Dursley    | Marmaduke
+ Sirius     | Black      | 
+ Remus      | Lupin      | 
+ Albus      | Dumbledore | 
+
+
+
+
+
+ b) The cat's name, adopter's name, and adopted date for each cat adopted within the past month to be displayed as part of the 
+ "Happy Tail" social media promotion which posts recent successful adoptions.
+
+SELECT cats.name AS "cat_name", a.first_name, ca.date
+FROM cats
+JOIN
+  (SELECT date, cat_id, adopter_id
+  FROM cat_adoptions
+  WHERE date > CURRENT_DATE - INTERVAL '1 month') ca
+ON cats.id = ca.cat_id
+JOIN
+  (SELECT first_name, id
+  FROM adopters) a
+ON ca.adopter_id = a.id;
+
+
+
+| cat_name | first_name | date                     |
+| -------- | ---------- | ------------------------ |
+| Mushi    | Arabella   | 2019-11-11T00:00:00.000Z |
+| Victoire | Argus      | 2019-11-16T00:00:00.000Z |
+
+---
+
+c) Adopters who have not yet chosen a dog to adopt and generate all possible combinations of adopters and available dogs.
+
+
+postgres=# SELECT adopters.first_name AS adopter_name, dogs.name AS dog_name FROM adopters 
+CROSS JOIN dogs WHERE adopters.id NOT IN (SELECT adopter_id FROM dog_adoptions) AND dogs.id NOT IN (SELECT dog_id FROM dog_adoptions)
+ ORDER BY adopters.first_name;
+ adopter_name | dog_name  
+--------------+-----------
+ Arabella     | Marmaduke
+ Arabella     | Boujee
+ Arabella     | Munchkin
+ Arabella     | Marley
+ Arabella     | Lassie
+ Hermione     | Marmaduke
+ Hermione     | Lassie
+ Hermione     | Munchkin
+ Hermione     | Boujee
+ Hermione     | Marley
+(10 rows)
+
+
+ d) Lists of all cats and all dogs who have not been adopted.
+
+postgres=# SELECT C.id, C.name FROM cats C WHERE C.id NOT IN (SELECT cat_id FROM cat_adoptions)
+ UNION SELECT D.id, D.name FROM dogs D WHERE D.id NOT IN (SELECT dog_id FROM dog_adoptions) ORDER BY id;
+  id   |   name    
+-------+-----------
+     2 | Seashell
+     5 | Nala
+ 10001 | Boujee
+ 10002 | Munchkin
+ 10003 | Lassie
+ 10004 | Marley
+ 10006 | Marmaduke
+(7 rows)
+
+
+
+ e) The name of the person who adopted Rosco.
+
+ postgres=# SELECT first_name, last_name
+postgres-# FROM adopters
+postgres-# WHERE id IN
+postgres-#   (SELECT adopter_id
+postgres(#   FROM dog_adoptions
+postgres(#   JOIN dogs
+postgres(#   ON dog_adoptions.dog_id = dogs.id
+postgres(#   WHERE dogs.name = 'Rosco');
+ first_name | last_name 
+------------+-----------
+ Argus      | Filch
+(1 row)
+
+
+
+
+ 8 Using this Library schema and data, write queries applying the following scenarios, and include the results:
+
+
+ a) To determine if the library should buy more copies of a given book, please provide the names and position, in order, 
+ of all of the patrons with a hold (request for a book with all copies checked out) on "Advanced Potion-Making".
+
+postgres=# SELECT patrons.name, holds.rank FROM patrons JOIN holds ON patrons.id = holds.id
+ WHERE holds.isbn IN (SELECT isbn FROM books WHERE title = 'Fantastic Beasts and Where to Find Them') ORDER BY holds.rank;
+       name       | rank 
+------------------+------
+ Hermione Granger |    1
+(1 row)
+
+
+
+
+ b) Make a list of all book titles and denote whether or not a copy of that book is checked out.
+
+postgres=# SELECT books.title, COUNT(h.*) AS "holds" FROM books LEFT JOIN (SELECT isbn FROM holds) h USING (isbn) GROUP BY (books.title);
+                  title                  | holds 
+-----------------------------------------+-------
+ Advanced Potion-Making                  |     2
+ Fantastic Beasts and Where to Find Them |     1
+ Hogwarts: A History                     |     0
+(3 rows)
+
+
+
+ c) In an effort to learn which books take longer to read, the librarians would like you to create a list of average checked out
+  time by book name in the past month.
+
+
+postgres=# SELECT B.title, AVG(T.checked_in_date - T.checked_out_date) FROM transactions T JOIN books B ON B.isbn = T.isbn 
+WHERE B.isbn = ANY (SELECT T.isbn FROM transactions T WHERE T.checked_out_date > CURRENT_DATE - INTERVAL '1 MONTH' 
+AND T.checked_in_date IS NOT NULL) GROUP BY B.title ORDER BY 2;
+                  title                  |        avg         
+-----------------------------------------+--------------------
+ Fantastic Beasts and Where to Find Them | 2.0000000000000000
+(1 row)
+
+
+
+
+
+ d) In order to learn which items should be retired, make a list of all books that have not been checked out in the past 5 years.
+
+postgres=# SELECT B.title FROM books B WHERE B.isbn = ANY (SELECT isbn FROM transactions GROUP BY isbn
+ HAVING MAX(checked_out_date) < CURRENT_DATE - INTERVAL '5 Years');
+        title        
+---------------------
+ Hogwarts: A History
+(1 row)
+
+
+
+
+
+ e) List all of the library patrons. If they have one or more books checked out, correspond the books to the patrons.
+
+        postgres=# SELECT patrons.name, b.title AS checked_out_book FROM patrons LEFT JOIN (SELECT books.title, transactions.patron_id FROM books JOIN transactions USING (isbn) WHERE transactions.checked_in_date IS NULL) b ON b.patron_id = patrons.id ORDER BY patrons.name;
+       name       |            checked_out_book             
+------------------+-----------------------------------------
+ Cedric Diggory   | Fantastic Beasts and Where to Find Them
+ Cho Chang        | 
+ Hermione Granger | 
+ Padma Patil      | 
+ Terry Boot       | Advanced Potion-Making
+(5 rows)
+
+
+
+
+9 Using this Flight schema and data, write queries applying the following scenarios, and include the results:
+
+
+ a) To determine the most profitable airplanes, find all airplane models where each flight has had over 250 paying customers in the past month.
+
+postgres=# SELECT P.model
+      FROM airplanes P
+      WHERE P.model = ANY
+        (SELECT F.airplane_model
+        FROM flights F
+        JOIN transactionsf T 
+        ON F.flight_number = T.flight_number
+        WHERE T.date > CURRENT_DATE - INTERVAL '1 MONTH'
+        GROUP BY 1
+        HAVING MIN(T.seats_sold) > 250);
+    model    
+-------------
+ Boeing 777
+ Boeing 787
+ Airbus A380
+(3 rows)
+
+
+
+
+ b) To determine the most profitable flights, find all destination-origin pairs where 90% or more of the seats have been sold in the past month.
+
+
+postgres=# SELECT F.origin, F.destination
+              FROM flights F
+              WHERE F.flight_number = ANY
+                    (SELECT T.flight_number
+                      FROM transactionsf T
+                      JOIN airplanes P ON F.airplane_model = P.model
+                      WHERE T.date > CURRENT_DATE - INTERVAL '1 MONTH'
+                      GROUP BY T.flight_number, P.seat_capacity
+                      HAVING AVG(T.seats_sold) >= (P.seat_capacity * 0.9));
+ origin | destination 
+--------+-------------
+ LHR    | JFK
+ SFO    | HKG
+ LHR    | JNB
+(3 rows)
+
+
+
+
+ c) The airline is looking to expand its presence in Asia and globally. Find the total revenue of any flight (not time restricted) arriving at
+  or departing from Singapore (SIN).
+
+
+postgres=#  SELECT flight_number, total_revenue
+    FROM transactionsf
+    WHERE flight_number IN
+      (SELECT flight_number
+      FROM flights
+      WHERE origin = 'SIN' OR destination = 'SIN');
+ flight_number | total_revenue 
+---------------+---------------
+          7352 |   250394.7000
+          7403 |   131992.1200
+(2 rows)
+
+
+
+
+ d) Compare the subqueries you've written above. Compare them to the joins you wrote in Checkpoint 6. Which ones are more readable? Which were
+  more logical to write?
+Subquerries comparing with chapter 6 make the querries a little easier to resolve if I know how to use it. Is not easy to Implement. I think
+is easier to work with simple JOIN, however sbquerries allow to manipulate logic in a deeper way and more granulated. Subquerries are more logical
+however JOIN are more readable at first, but once I was reading and resolved several time, I can see this subquerries are more exact than simple join.
+Anyway it gives a lot of work.
+
+
